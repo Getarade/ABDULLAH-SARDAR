@@ -1,7 +1,7 @@
 # Abdullah Sardar | AI-Powered Developer Portfolio
 
 ## 🚀 Live Demo  
-[View Live Portfolio](https://getarade.github.io/freelancer/)
+[View Live Portfolio](https://getarade.github.io/ABDULLAH-SARDAR/)
 
 👤 Professional Bio
 "I'm Abdullah Sardar, a freelance developer specializing in web development, Python programming, and AI-assisted solutions that push the boundaries of what's possible. I transform ideas into digital reality by creating robust, scalable solutions centered on user needs."
