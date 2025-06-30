@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AI Content Generator</title>
+    <style>
+      /* CSS styles for the interface */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .ai-generator {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .ai-input {
+        display: flex;
+        margin-bottom: 20px;
+      }
+      #content-topic {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      .btn {
+        background: #0ea5e9;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-left: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .btn:hover {
+        background: #0284c7;
+      }
+      .ai-output {
+        min-height: 200px;
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        background: #fafafa;
+      }
+      .loading {
+        color: #666;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ai-generator">
+      <h1>AI Content Generator</h1>
+      <p>Enter a topic below and let AI generate content for you</p>
+
+      <div class="ai-input">
+        <input
+          type="text"
+          id="content-topic"
+          placeholder="Enter a topic (e.g., 'benefits of exercise')"
+        />
+        <button class="btn" onclick="generateContent()">Generate</button>
+      </div>
+
+      <div class="ai-output" id="ai-output">
+        Generated content will appear here...
+      </div>
+    </div>
+
+    <script>
+      function generateContent() {
+        const topic = document.getElementById("content-topic").value;
+        const output = document.getElementById("ai-output");
+
+        // Validate input
+        if (!topic.trim()) {
+          output.innerHTML =
+            '<p style="color:red">Please enter a topic first</p>';
+          return;
+        }
+
+        // Show loading state
+        output.innerHTML =
+          '<div class="loading">Generating content... (This may take 10-20 seconds)</div>';
+
+        // Call the backend API
+        fetch("/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic: topic }),
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error("Network response was not ok");
+            return response.json();
+          })
+          .then((data) => {
+            if (data.content) {
+              // Format the response with line breaks
+              const formattedContent = data.content.replace(/\n/g, "<br>");
+              output.innerHTML = `<p>${formattedContent}</p>`;
+            } else {
+              output.innerHTML = `<p style="color:red">Error: ${
+                data.error || "Unknown error occurred"
+              }</p>`;
+            }
+          })
+          .catch((error) => {
+            output.innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
+          });
+      }
+
+      // Allow pressing Enter to generate content
+      document
+        .getElementById("content-topic")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            generateContent();
+          }
+        });
+    </script>
+  </body>
+</html>
